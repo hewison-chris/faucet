@@ -289,7 +289,7 @@ public class Faucet : FaucetAPI
     {
         static assert (isInputRange!UR);
 
-        auto count = min(max_count, secret_keys.length);
+        auto count = min(max_count, secret_keys.length - 1);
         assert(count > 0);
         return utxo_rng
             .filter!(tup => tup.value.output.value >= Amount(count))
