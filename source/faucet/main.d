@@ -210,7 +210,9 @@ public class Faucet : FaucetAPI
         assert(ownerSecret !is SecretKey.init,
                 "Address not known: " ~ out_ref.output.address.toString());
 
-        return genKeyUnlock(KeyPair.fromSeed(ownerSecret).sign(tx));
+        return genKeyUnlock(
+            KeyPair(out_ref.output.address, secret_keys[out_ref.output.address])
+                .sign(tx));
     }
 
     /*******************************************************************************
