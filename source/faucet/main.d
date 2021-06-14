@@ -210,9 +210,7 @@ public class Faucet : FaucetAPI
         assert(ownerSecret !is SecretKey.init,
                 "Address not known: " ~ out_ref.output.address.toString());
 
-        return genKeyUnlock(
-            KeyPair(out_ref.output.address, secret_keys[out_ref.output.address])
-                .sign(tx));
+        return genKeyUnlock(KeyPair(out_ref.output.address, ownerSecret).sign(tx));
     }
 
     /*******************************************************************************
@@ -349,7 +347,7 @@ public class Faucet : FaucetAPI
 
         if (this.state.utxos.storage.length > config.tx_generator.merge_threshold)
         {
-            auto tx = this.mergeTx(this.state.utxos.byKeyValue().take(uniform(10, 100, rndGen)));
+            auto tx = this.mergeTx(this.state.owned_utxos.byKeyValue().take(uniform(10, 100, rndGen)));
             this.randomClient().putTransaction(tx);
             logDebug("Transaction sent: %s", tx);
             this.faucet_stats.increaseMetricBy!"faucet_transactions_sent_total"(1);
